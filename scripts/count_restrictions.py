@@ -3,7 +3,7 @@
 count_restrictions.py: count the number of restriction words for each item in a
 corpus
 """
-
+import platform
 import argparse
 import collections
 import csv
@@ -23,6 +23,14 @@ PATTERN = re.compile(r'\b(?P<match>{})\b'.format('|'.join(RESTRICTIONS)))
 
 log = logging.getLogger(Path(__file__).stem)
 
+def process_or_thread():
+    worker_os = platform.system()
+    if worker_os in ['Darwin', 'Linux']:
+        worker_type = 'thread'
+        return worker_type
+    if worker_os in ['Windows']:
+        worker_type = 'process'
+        return worker_type
 
 def parse_args():
     """Parse command line arguments."""
@@ -59,9 +67,10 @@ def main():
     logging.basicConfig(level=args.verbose)
     driver = quantgov.load_driver(args.driver)
     writer = csv.writer(args.outfile)
+    worker_type = process_or_thread()
     writer.writerow(driver.index_labels + RESTRICTIONS + ('restrictions',))
     for docind, counts in quantgov.utils.lazy_parallel(
-            count_restrictions, driver.stream(), worker='process'):
+            count_restrictions, driver.stream(), worker=worker_type):
         writer.writerow(
             docind + tuple(counts[i] for i in RESTRICTIONS) +
             (sum(counts.values()),)
