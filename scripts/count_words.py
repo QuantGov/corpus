@@ -51,7 +51,7 @@ def main():
     writer = csv.writer(args.outfile)
     writer.writerow(driver.index_labels + ('words',))
     for docindex, count in quantgov.utils.lazy_parallel(
-            count_words, driver.stream(), worker='process'):
+            count_words, driver.stream(), worker='thread'):
         writer.writerow(docindex + (count,))
 
 

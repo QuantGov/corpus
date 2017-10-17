@@ -61,7 +61,7 @@ def main():
     writer = csv.writer(args.outfile)
     writer.writerow(driver.index_labels + RESTRICTIONS + ('restrictions',))
     for docind, counts in quantgov.utils.lazy_parallel(
-            count_restrictions, driver.stream(), worker='process'):
+            count_restrictions, driver.stream(), worker='thread'):
         writer.writerow(
             docind + tuple(counts[i] for i in RESTRICTIONS) +
             (sum(counts.values()),)
