@@ -1,4 +1,4 @@
 python >= 3.5
 pandas
-m2-make
+snakemake
 requests # for QuantGov
