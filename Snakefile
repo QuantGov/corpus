@@ -10,6 +10,7 @@ TODAY = str(datetime.date.today())
 rule all:
     input: 'data/metadata.csv'
 
+
 #### UPDATE TIMESTAMP ##########################################################
 ## This section performs a 'touch' on 'driver.py', updating the timestamp on
 ## that file so that snakemake is aware of your most recent run. 
@@ -17,7 +18,8 @@ rule all:
 rule update_timestamp:
     input: 'data/clean'
     output: 'driver.py'
-    shell: 'touch {output}'
+    run:
+        Path(output[0]).touch()
 
 #### ANALYSIS ##################################################################
 ## This section handles analysis, which by default includes generating a
