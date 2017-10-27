@@ -1,11 +1,8 @@
-import datetime
 from pathlib import Path
 
 # Note: snakemake and Python 3.6 f-strings use similar '{bracket syntax}' to 
 # inject variables into strings. Be cognizant of the presence of 'f' before some
 # strings in this file.
-
-TODAY = str(datetime.date.today())
 
 rule all:
     input: 'data/metadata.csv'
@@ -24,7 +21,8 @@ rule update_timestamp:
 #### ANALYSIS ##################################################################
 ## This section handles analysis, which by default includes generating a
 ## wordcount, a restriction count, and a metadata that combines the two. Your
-## project may have different aims and thus may employ different scripts.
+## project may have different aims and thus may employ different scripts or 
+## commands.
 
 rule create_wordcount:
     input: 'driver.py'
