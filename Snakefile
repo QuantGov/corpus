@@ -8,15 +8,12 @@ def outpath(path):
 # inject variables into strings. Be cognizant of the presence of 'f' before some
 # strings in this file.
 
-rule all:
-    input: rules.create_metadata.output
+#### CORPUS DRIVER #############################################################
+## This section updates the corpus driver's time stamp every time the clean
+## folder is re-created. This is appropriate when the clean folder is deleted
+## and re-created every time it changes.
 
-
-#### UPDATE TIMESTAMP ##########################################################
-## This section performs a 'touch' on 'driver.py', updating the timestamp on
-## that file so that snakemake is aware of your most recent run. 
-
-rule update_timestamp:
+rule prepare_corpus:
     input: 'data/clean'
     output: 'driver.py'
     run:
