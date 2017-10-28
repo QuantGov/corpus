@@ -1,11 +1,15 @@
 from pathlib import Path
 
+def outpath(path):
+    """Ensure Cross-Platform functionality for files in subdirectories"""
+    return os.path.sep.join(os.path.split(path))
+
 # Note: snakemake and Python 3.6 f-strings use similar '{bracket syntax}' to 
 # inject variables into strings. Be cognizant of the presence of 'f' before some
 # strings in this file.
 
 rule all:
-    input: 'data/metadata.csv'
+    input: rules.create_metadata.output
 
 
 #### UPDATE TIMESTAMP ##########################################################
@@ -26,20 +30,20 @@ rule update_timestamp:
 
 rule create_wordcount:
     input: 'driver.py'
-    output: 'data/wordcount.csv'
+    output: outpath('data/wordcount.csv')
     shell: 'quantgov corpus count_words {input} -o {output}'
 
-rule create_restrictions:
+rule create_restriction_count:
     input: 'driver.py'
-    output: 'data/restrictions.csv'
+    output: outpath('data/restrictions.csv')
     shell: 'quantgov corpus count_occurrences {input} shall must "may not" required prohibited -o {output}'
 
 rule create_metadata:
     input:
-        'data/wordcount.csv',
-        'data/restrictions.csv'
+        rules.create_wordcount.output,
+        rules.create_restriction_count.output
     output:
-        'data/metadata.csv'
+        outpath('data/metadata.csv')
     run:
         import pandas as pd
         df = pd.read_csv(input[0])
