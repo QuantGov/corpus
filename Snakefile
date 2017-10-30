@@ -4,9 +4,6 @@ def outpath(path):
     """Ensure Cross-Platform functionality for files in subdirectories"""
     return os.path.sep.join(os.path.split(path))
 
-# Note: snakemake and Python 3.6 f-strings use similar '{bracket syntax}' to 
-# inject variables into strings. Be cognizant of the presence of 'f' before some
-# strings in this file.
 
 #### CORPUS DRIVER #############################################################
 ## This section updates the corpus driver's time stamp every time the clean
@@ -14,10 +11,8 @@ def outpath(path):
 ## and re-created every time it changes.
 
 rule prepare_corpus:
-    input: 'data/clean'
-    output: 'driver.py'
-    run:
-        Path(output[0]).touch()
+    input: 'data/clean',
+    output: touch('driver.py')
 
 #### ANALYSIS ##################################################################
 ## This section handles analysis, which by default includes generating a
