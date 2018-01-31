@@ -6,13 +6,13 @@ def outpath(path):
 
 
 #### CORPUS DRIVER #############################################################
-## This section updates the corpus driver's time stamp every time the clean
+## This section updates the corpus's time stamp every time the clean
 ## folder is re-created. This is appropriate when the clean folder is deleted
 ## and re-created every time it changes.
 
 rule prepare_corpus:
-    input: 'data/clean',
-    output: touch('driver.py')
+    input: 'driver.py', 'data/clean'
+    output: touch('timestamp')
 
 #### ANALYSIS ##################################################################
 ## This section handles analysis, which by default includes generating a
@@ -21,12 +21,12 @@ rule prepare_corpus:
 ## commands.
 
 rule create_wordcount:
-    input: 'driver.py'
+    input: 'timestamp'
     output: outpath('data/wordcount.csv')
     shell: 'quantgov corpus count_words {input} -o {output}'
 
 rule create_restriction_count:
-    input: 'driver.py'
+    input: 'timestamp'
     output: outpath('data/restrictions.csv')
     shell: 'quantgov corpus count_occurrences {input} shall must "may not" required prohibited -o {output}'
 
